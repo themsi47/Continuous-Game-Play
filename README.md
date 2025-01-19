@@ -41,33 +41,38 @@ def view_inventory():
 
 def storyline():
     """Introduces the storyline and begins the adventure."""
-    print("\n=== The Tale Begins ===")   # Introduction to the game story 
+    print("\n=== The Tale Begins ===")  # Introduction to the game story
     print("You are a wandering adventurer seeking fame and fortune.")
     print("One day, you hear a tale of the Lost Crown of Eldoria, an artifact of immense power.")
     print("Determined to claim it, you set out on a journey filled with danger and decisions.")
 
     # Loop through the scenarios and handle user's choices
     for i in range(min(len(scenarios), 30)):  # Adjusted loop length to fit scenarios length
-        print(f"\n=== Chapter {i + 1} ===")   # Display chapter number 
-        current_event = scenarios[i]       # Get the current scenarios details 
-        print(f"{current_event['description']}")   # Print the event description
-        choices = current_event['choices']      # Retrience avaible choices
+        print(f"\n=== Chapter {i + 1} ===")  # Display chapter number
+        current_event = scenarios[i]  # Get the current scenario details
+        print(f"{current_event['description']}")  # Print the event description
+        choices = current_event['choices']  # Retrieve available choices
         print("Your options:")
-        for idx, option in enumerate(choices):       # Display numbered choices
+        for idx, option in enumerate(choices):  # Display numbered choices
             print(f"{idx + 1}. {option['text']}")
 
-        try:
-            # User selects an action
-            action = int(input("Choose your action: ").strip().rstrip('.'))
-            selected_choice = choices[action - 1] # Match user's choice to available options
-            print(selected_choice['outcome']) # Print the outcome of the selected action
- 
-             # Check if the selected choice provides an item 
-            if 'item' in selected_choice:
-                inventory.append(selected_choice['item'])   # Add the item to the inventory 
-                print(f"You acquired a {selected_choice['item']}!")   # Notify the player
-        except (ValueError, IndexError): # Handle invalid inputs
-            print("That is not a valid choice. Please press 1, 2, or 3.")
+        while True:  # Loop until valid input is provided
+            try:
+                # User selects an action
+                action = int(input("Choose your action: ").strip().rstrip('.'))
+                if 1 <= action <= len(choices):  # Check if the input is within valid range
+                    selected_choice = choices[action - 1]  # Match user's choice to available options
+                    print(selected_choice['outcome'])  # Print the outcome of the selected action
+
+                    # Check if the selected choice provides an item
+                    if 'item' in selected_choice:
+                        inventory.append(selected_choice['item'])  # Add the item to the inventory
+                        print(f"You acquired a {selected_choice['item']}!")  # Notify the player
+                    break  # Exit the loop if valid input is provided
+                else:
+                    print("Invalid input. Please choose a valid option.")
+            except (ValueError, IndexError):  # Handle invalid inputs
+                print("That is not a valid choice. Please press a number corresponding to the options.")
 
         # Loop until the user presses Enter or 'q' to quit
         while True:
@@ -79,7 +84,7 @@ def storyline():
                 return  # Stop the game immediately if the user presses 'q'
             else:
                 print("Invalid input. Please press Enter to continue or 'q' to quit your journey.")
-    
+
     # End of the game after Chapter 30
     print("\n=== The Journey Concludes ===")
     print("You have completed your quest. Whether victorious or defeated, your legacy is now written in the annals of Eldoria.")
@@ -312,4 +317,3 @@ scenarios = [   # List of scenarios with descriptions and choices
 # Start the Game
 if __name__ == "__main__":
     main_menu()      # Launch the main menu 
-
